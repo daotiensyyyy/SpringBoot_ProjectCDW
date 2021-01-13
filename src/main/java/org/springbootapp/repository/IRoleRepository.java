@@ -1,10 +1,12 @@
 package org.springbootapp.repository;
 
-import org.springbootapp.entity.RoleEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-@Repository
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import org.springbootapp.common.ERole;
+import org.springbootapp.entity.RoleEntity;
+
 public interface IRoleRepository extends JpaRepository<RoleEntity, Long>{
-	RoleEntity findRoleByName(String roleName);
+	Optional<RoleEntity>findByName(ERole role);
 }

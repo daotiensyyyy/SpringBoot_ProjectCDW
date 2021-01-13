@@ -19,13 +19,13 @@ class ProjectCdwApplicationTests {
 
 	@Test
 	void test() {
-		r1 = new RoleEntity("AAA");
-		r2 = new RoleEntity("AAA");
-		if (r1.equals(r2)) {
-			System.out.println("OK");
-		} else {
-			System.out.println("ERR");
-		}
+//		r1 = new RoleEntity("AAA");
+//		r2 = new RoleEntity("AAA");
+//		if (r1.equals(r2)) {
+//			System.out.println("OK");
+//		} else {
+//			System.out.println("ERR");
+//		}
 
 	}
 

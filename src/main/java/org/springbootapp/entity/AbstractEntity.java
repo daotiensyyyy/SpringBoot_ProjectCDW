@@ -22,12 +22,4 @@ public abstract class AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
-//	@Column(name = "createdBy")
-//	private String createdBy;
-//	@Column(name = "createdDate")
-//	private Date createdDate;
-//	@Column(name = "modifiedBy")
-//	private String modifiedBy;
-//	@Column(name = "modifiedDate")
-//	private Date modifiedDate;
 }

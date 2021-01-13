@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springbootapp.entity.ImageEntity;
 import org.springbootapp.entity.ProductEntity;
 
+
 public interface IProductService {
 	List<ProductEntity> getAll();
 

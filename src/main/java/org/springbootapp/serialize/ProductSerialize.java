@@ -2,11 +2,11 @@ package org.springbootapp.serialize;
 
 import java.io.IOException;
 
-import org.springbootapp.entity.ProductEntity;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.springbootapp.entity.ProductEntity;
 
 public class ProductSerialize extends StdSerializer<ProductEntity>{
 
@@ -31,9 +31,9 @@ public class ProductSerialize extends StdSerializer<ProductEntity>{
 		gen.writeObjectField("price", value.getPrice());
 		gen.writeObjectField("description", value.getDescription());
 		gen.writeObjectField("evaluate", value.getEvaluate());
-		gen.writeObjectField("images", value.getImages());
 		gen.writeObjectField("category", value.getCategory().getId());
-		gen.writeEndObject();
+		gen.writeObjectField("images", value.getImages().size());
+		gen.writeEndObject(); 
 	}
 
 }

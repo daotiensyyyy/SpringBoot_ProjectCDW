@@ -5,6 +5,7 @@ import java.util.List;
 import org.springbootapp.entity.CategoryEntity;
 import org.springbootapp.entity.ProductEntity;
 
+
 public interface ICategoryService {
 	CategoryEntity create(CategoryEntity category);
 

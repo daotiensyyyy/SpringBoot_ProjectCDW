@@ -26,14 +26,14 @@ public class ImageEntity extends AbstractEntity {
 	public ImageEntity(Long id) {
 		super(id);
 	}
-	
+
 	@JsonCreator
 	public ImageEntity(String link, String description) {
 		super();
 		this.link = link;
 		this.description = description;
 	}
-	
+
 	public ImageEntity(Long id, String link, String description) {
 		super(id);
 		this.link = link;

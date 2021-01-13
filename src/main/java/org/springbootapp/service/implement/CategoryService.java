@@ -5,12 +5,13 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import org.springbootapp.entity.CategoryEntity;
 import org.springbootapp.entity.ProductEntity;
 import org.springbootapp.repository.ICategoryRepository;
 import org.springbootapp.service.ICategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService implements ICategoryService {

@@ -1,3 +1,4 @@
+package org.springbootapp.entity;
 //package org.springbootapp.entity;
 //
 //import javax.persistence.Column;

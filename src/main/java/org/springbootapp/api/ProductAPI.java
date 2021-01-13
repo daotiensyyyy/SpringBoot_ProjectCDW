@@ -3,11 +3,10 @@ package org.springbootapp.api;
 import java.util.List;
 import java.util.Optional;
 
-import org.springbootapp.entity.ProductEntity;
-import org.springbootapp.service.implement.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = {"http://localhost:3000"})
+import org.springbootapp.entity.ProductEntity;
+import org.springbootapp.service.implement.ProductService;
+
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 public class ProductAPI {
 
@@ -23,12 +25,13 @@ public class ProductAPI {
 	ProductService productService;
 
 	@RequestMapping(value = "/products", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<ProductEntity> createProduct(@RequestBody ProductEntity product) {
 		try {
 			productService.save(product);
 			// Trả về response với STATUS CODE = 201
 			// Body sẽ chứa thông tin về đối tượng todo vừa được tạo.
-			return new ResponseEntity<>(product, HttpStatus.CREATED);
+			return new ResponseEntity<>(product, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -66,6 +69,7 @@ public class ProductAPI {
 //	}
 
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<HttpStatus> deleteById(@PathVariable("id") Long id) {
 		try {
 			productService.delete(id);
@@ -76,6 +80,7 @@ public class ProductAPI {
 	}
 	
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<HttpStatus> updateById(@PathVariable("id") Long id, @RequestBody ProductEntity newProduct) {
 		try {
 			productService.update(id, newProduct);

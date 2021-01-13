@@ -7,16 +7,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springbootapp.serialize.ProductSerialize;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springbootapp.serialize.ProductSerialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,19 +50,23 @@ public class ProductEntity extends AbstractEntity {
 	private Set<ImageEntity> images;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="category_id", nullable=false)
 	private CategoryEntity category;
 
 	
 	@JsonCreator
-	public ProductEntity(Long id, String name, int price, String description, double evaluate, Set<ImageEntity> images,
-			Long category) {
+	public ProductEntity(Long id, String name, int price, String description, double evaluate, 
+			Long category, Set<ImageEntity> images ) {
 		super(id);
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.evaluate = evaluate;
-		this.images = new HashSet<>();
 		this.category = new CategoryEntity(category);
+		this.images = new HashSet<>();
+		if (images != null) {
+			images.forEach(image -> this.addImage(image));
+		}
 	}
 
 	public void addImage(ImageEntity image) {
