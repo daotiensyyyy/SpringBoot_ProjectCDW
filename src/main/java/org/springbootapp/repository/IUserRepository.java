@@ -11,6 +11,8 @@ import org.springbootapp.entity.UserEntity;
 public interface IUserRepository extends JpaRepository<UserEntity, Long>{
 	Optional<UserEntity>findByUsername(String username);
 	
+	UserEntity findByEmail(String email);
+	
 	Boolean existsByUsername(String username);
 	
 	Boolean existsByEmail(String email);

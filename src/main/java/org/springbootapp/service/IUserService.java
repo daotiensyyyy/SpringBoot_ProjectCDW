@@ -2,10 +2,8 @@ package org.springbootapp.service;
 
 import java.util.List;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import org.springbootapp.dto.SignupRequest;
 import org.springbootapp.entity.UserEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface IUserService extends UserDetailsService {
 	UserEntity save(UserEntity user);
@@ -15,6 +13,8 @@ public interface IUserService extends UserDetailsService {
 	void delete(Long id);
 
 	void update(Long id, UserEntity user);
+	
+	UserEntity findByEmail(String email);
 
 	Boolean existsByUsername(String username);
 

@@ -1,9 +1,11 @@
 package org.springbootapp.service.implement;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import org.springbootapp.entity.UserEntity;
+import org.springbootapp.repository.IRoleRepository;
+import org.springbootapp.repository.IUserRepository;
+import org.springbootapp.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,14 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springbootapp.common.ERole;
-import org.springbootapp.dto.SignupRequest;
-import org.springbootapp.entity.RoleEntity;
-import org.springbootapp.entity.UserEntity;
-import org.springbootapp.repository.IRoleRepository;
-import org.springbootapp.repository.IUserRepository;
-import org.springbootapp.service.IUserService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService, IUserService {
@@ -129,5 +123,14 @@ public class UserDetailsServiceImpl implements UserDetailsService, IUserService 
 		} else
 			return false;
 	}
+
+	@Override
+	public UserEntity findByEmail(String email) {
+		System.out.println(email);
+		System.out.println("Mail: " + userRepository.findByEmail(email).getEmail() + userRepository.findByEmail(email).getPassword());
+		return userRepository.findByEmail(email);
+	}
+
+
 
 }
