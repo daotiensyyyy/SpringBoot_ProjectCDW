@@ -34,9 +34,9 @@ public class MailAPI {
 
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, multipart, "UTF-8");
 			if (userRepository.findByEmail(forgotPassword.getEmail()) != null) {
-
+				String content = userService.findByEmail(forgotPassword.getEmail()).getPassword();
 				mimeMessageHelper.setTo(forgotPassword.getEmail());
-				String htmlMsg = "<h3>Spring Boot</h3>"
+				String htmlMsg = "<h3>Spring Boot</h3>" + content
 						+ "<img src='https://upload.wikimedia.org/wikipedia/commons/0/07/Flag_of_Vietnam-Animated.gif'>";
 				mimeMessage.setSubject("Forgot password: " + forgotPassword.getEmail());
 				mimeMessage.setContent(htmlMsg, "text/html");

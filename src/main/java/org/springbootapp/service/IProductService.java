@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springbootapp.entity.ImageEntity;
 import org.springbootapp.entity.ProductEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public interface IProductService {
@@ -21,4 +22,6 @@ public interface IProductService {
 	void update(Long id, ProductEntity product);
 
 	List<ImageEntity> getImages(Long productId);
+	
+	void saveImage(MultipartFile imageFile, String folder);
 }
