@@ -134,6 +134,7 @@ public class UserAPI {
 		String appUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
 
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setFrom("lacduong953@gmail.com");
 		mailMessage.setTo(user.getEmail());
 		mailMessage.setSubject("Complete Registration!");
 		mailMessage.setText("To confirm your account, please click here : " + appUrl + "/confirm-account?token="
@@ -179,7 +180,7 @@ public class UserAPI {
 		userService.addItemToCart(customerID, item);
 	}
 
-	@RequestMapping(value = "/confirm-account", method = RequestMethod.POST)
+	@RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity confirmUserAccount(@RequestBody Map<String, String> requestPa) {
 		ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(requestPa.get("token"));
 
