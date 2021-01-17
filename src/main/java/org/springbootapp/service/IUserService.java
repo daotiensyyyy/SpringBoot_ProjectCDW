@@ -2,6 +2,7 @@ package org.springbootapp.service;
 
 import java.util.List;
 
+import org.springbootapp.entity.CartItem;
 import org.springbootapp.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -19,4 +20,6 @@ public interface IUserService extends UserDetailsService {
 	Boolean existsByUsername(String username);
 
 	Boolean existsByEmail(String email);
+	
+	void addItemToCart(Long userID, CartItem item);
 }

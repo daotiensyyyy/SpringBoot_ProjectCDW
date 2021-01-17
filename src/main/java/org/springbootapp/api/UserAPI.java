@@ -5,6 +5,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springbootapp.common.ERole;
+import org.springbootapp.dto.JwtResponse;
+import org.springbootapp.dto.LoginRequest;
+import org.springbootapp.dto.MessageResponse;
+import org.springbootapp.dto.SignupRequest;
+import org.springbootapp.entity.CartItem;
+import org.springbootapp.entity.RoleEntity;
+import org.springbootapp.entity.UserEntity;
+import org.springbootapp.jwt.JwtUtils;
+import org.springbootapp.repository.IRoleRepository;
+import org.springbootapp.repository.IUserRepository;
+import org.springbootapp.service.IRoleService;
+import org.springbootapp.service.IUserService;
+import org.springbootapp.service.implement.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,24 +31,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import org.springbootapp.common.ERole;
-import org.springbootapp.dto.JwtResponse;
-import org.springbootapp.dto.LoginRequest;
-import org.springbootapp.dto.MessageResponse;
-import org.springbootapp.dto.SignupRequest;
-import org.springbootapp.entity.RoleEntity;
-import org.springbootapp.entity.UserEntity;
-import org.springbootapp.jwt.JwtUtils;
-import org.springbootapp.repository.IRoleRepository;
-import org.springbootapp.repository.IUserRepository;
-import org.springbootapp.service.IRoleService;
-import org.springbootapp.service.IUserService;
-import org.springbootapp.service.implement.UserDetailsImpl;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
@@ -143,5 +144,10 @@ public class UserAPI {
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@PostMapping("/users/{cid}/cart-items")
+	public void addItemToCart(@PathVariable("cid") Long customerID, @RequestBody CartItem item) {
+		userService.addItemToCart(customerID, item);
 	}
 }

@@ -2,7 +2,10 @@ package org.springbootapp.service.implement;
 
 import java.util.List;
 
+import org.springbootapp.entity.CartItem;
+import org.springbootapp.entity.ProductEntity;
 import org.springbootapp.entity.UserEntity;
+import org.springbootapp.repository.IProductRepository;
 import org.springbootapp.repository.IRoleRepository;
 import org.springbootapp.repository.IUserRepository;
 import org.springbootapp.service.IUserService;
@@ -19,6 +22,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, IUserService 
 
 	@Autowired
 	IUserRepository userRepository;
+	
+	@Autowired
+	IProductRepository productRepository;
 
 	@Autowired
 	IRoleRepository roleRepository;
@@ -129,6 +135,14 @@ public class UserDetailsServiceImpl implements UserDetailsService, IUserService 
 		System.out.println(email);
 		System.out.println("Mail: " + userRepository.findByEmail(email).getEmail() + userRepository.findByEmail(email).getPassword());
 		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	@Transactional
+	public void addItemToCart(Long userID, CartItem item) {
+		ProductEntity mergeProduct = productRepository.getOne(item.getProduct().getId());
+		userRepository.findByIdWithItemsGraph(userID)
+				.ifPresent(customer -> customer.addCartItem(mergeProduct, item.getQuantity()));
 	}
 
 

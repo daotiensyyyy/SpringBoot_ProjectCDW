@@ -7,7 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
-import org.springbootapp.serialize.OrderDetailSerialize;
+import org.springbootapp.serialize.CartItemSerialize;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,20 +17,22 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonSerialize(using = OrderDetailSerialize.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class OrderDetail {
+@JsonSerialize(using = CartItemSerialize.class)
+@ToString
+public class CartItem {
 	@EmbeddedId
-	private PkOrderDetail pk;
+	private PkCartItem pk;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("orderId")
+	@MapsId("customerId")
 	@Include
-	private OrderEntity order;
+	private UserEntity customer;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("productId")
 	@Include
@@ -38,18 +40,29 @@ public class OrderDetail {
 	@Column(columnDefinition = "int(5)")
 	private Long quantity;
 
-	public OrderDetail(OrderEntity order, ProductEntity product, Long quantity) {
+	public CartItem(UserEntity customer, ProductEntity product, Long quantity) {
 		super();
-		this.pk = new PkOrderDetail(order.getId(), product.getId());
-		this.order = order;
+		this.pk = new PkCartItem(customer.getId(), product.getId());
+		this.customer = customer;
 		this.product = product;
 		this.quantity = quantity;
 	}
 
 	@JsonCreator
-	public OrderDetail(Long productID, Long quantity) {
+	public CartItem(Long productID, Long quantity) {
 		super();
 		this.product = new ProductEntity(productID);
 		this.quantity = quantity;
 	}
+
+	public Long increaseQuantity(Long quantity) {
+		this.quantity += quantity;
+		return this.quantity;
+	}
+
+	public Long decreaseQuantity(Long quantity) {
+		this.quantity -= quantity;
+		return this.quantity;
+	}
+
 }

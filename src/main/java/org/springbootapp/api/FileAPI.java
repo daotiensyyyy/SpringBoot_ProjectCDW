@@ -24,19 +24,20 @@ public class FileAPI {
 	@Autowired
 	private IFileService service;
 	
-	private static String UPLOAD_DIR = "/uploads/";
+	private static String UPLOAD_DIR = "/uploads";
 
 	@RequestMapping(value = "files/upload", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
 		try {
+			
 			String fileName = file.getOriginalFilename();
-			String path =  UPLOAD_DIR + File.separator + fileName;
+			String path =  request.getServletContext().getRealPath(UPLOAD_DIR) + File.separator + fileName;
 			service.save(file.getInputStream(), path);
 			return new ResponseEntity<>(fileName, HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (Exception e) { 
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
+	} 
 
 }
