@@ -49,6 +49,8 @@ public class UserEntity extends AbstractEntity {
 
 	private String resetToken;
 
+	private boolean isEnabled;
+
 	public UserEntity(String username, String email, String password, String address, String phone) {
 		this.username = username;
 		this.email = email;

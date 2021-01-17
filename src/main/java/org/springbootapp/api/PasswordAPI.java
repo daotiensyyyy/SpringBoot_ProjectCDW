@@ -35,10 +35,10 @@ public class PasswordAPI {
 
 	// Process form submission from forgotPassword page
 	@RequestMapping(value = "/forgot", method = RequestMethod.POST)
-	public ResponseEntity processForgotPasswordForm(@RequestBody Map<String,String> userEmail, HttpServletRequest request) {
+	public ResponseEntity processForgotPasswordForm(@RequestBody Map<String,String> requestPa, HttpServletRequest request) {
 
 		// Lookup user in database by e-mail
-		Optional<UserEntity> optional = userService.findUserByEmail(userEmail.get("email"));
+		Optional<UserEntity> optional = userService.findUserByEmail(requestPa.get("email"));
 
 		if (!optional.isPresent()) {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -55,7 +55,6 @@ public class PasswordAPI {
 
 			// Email message
 			SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-			passwordResetEmail.setFrom("administrator@springbootapp.com");
 			passwordResetEmail.setTo(user.getEmail());
 			passwordResetEmail.setSubject("Password Reset Request");
 			passwordResetEmail.setText("To reset your password, click the link below:\n" + appUrl + "/reset?token="

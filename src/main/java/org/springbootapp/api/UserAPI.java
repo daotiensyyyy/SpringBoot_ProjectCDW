@@ -2,8 +2,12 @@ package org.springbootapp.api;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springbootapp.common.ERole;
 import org.springbootapp.dto.JwtResponse;
@@ -11,17 +15,21 @@ import org.springbootapp.dto.LoginRequest;
 import org.springbootapp.dto.MessageResponse;
 import org.springbootapp.dto.SignupRequest;
 import org.springbootapp.entity.CartItem;
+import org.springbootapp.entity.ConfirmationToken;
 import org.springbootapp.entity.RoleEntity;
 import org.springbootapp.entity.UserEntity;
 import org.springbootapp.jwt.JwtUtils;
+import org.springbootapp.repository.IConfirmationTokenRepository;
 import org.springbootapp.repository.IRoleRepository;
 import org.springbootapp.repository.IUserRepository;
+import org.springbootapp.service.IEmailService;
 import org.springbootapp.service.IRoleService;
 import org.springbootapp.service.IUserService;
 import org.springbootapp.service.implement.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,6 +70,12 @@ public class UserAPI {
 	@Autowired
 	JwtUtils jwtUtils;
 
+	@Autowired
+	IConfirmationTokenRepository confirmationTokenRepository;
+
+	@Autowired
+	IEmailService emailService;
+
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
@@ -76,15 +90,16 @@ public class UserAPI {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signupRequest) {
+	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signupRequest,
+			HttpServletRequest request) {
 		if (userService.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("ERR: Username is already taken!"));
 		}
 		if (userService.existsByEmail(signupRequest.getEmail())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("ERR: Email is already in use!"));
 		}
-		UserEntity user = new UserEntity(signupRequest.getUsername(), signupRequest.getEmail(), encoder.encode(signupRequest.getPassword()),
-				signupRequest.getAddress(), signupRequest.getPhone());
+		UserEntity user = new UserEntity(signupRequest.getUsername(), signupRequest.getEmail(),
+				encoder.encode(signupRequest.getPassword()), signupRequest.getAddress(), signupRequest.getPhone());
 		Set<String> strRoles = signupRequest.getRole();
 		Set<RoleEntity> roles = new HashSet<>();
 		if (strRoles == null) {
@@ -111,7 +126,20 @@ public class UserAPI {
 		}
 		user.setRoles(roles);
 		userService.save(user);
-		return ResponseEntity.ok(new MessageResponse("Successfull"));
+
+		ConfirmationToken confirmationToken = new ConfirmationToken(user);
+
+		confirmationTokenRepository.save(confirmationToken);
+
+		String appUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(user.getEmail());
+		mailMessage.setSubject("Complete Registration!");
+		mailMessage.setText("To confirm your account, please click here : " + appUrl + "/confirm-account?token="
+				+ confirmationToken.getConfirmationToken());
+		emailService.sendEmail(mailMessage);
+		return new ResponseEntity<>(confirmationToken.getConfirmationToken(),HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -145,9 +173,23 @@ public class UserAPI {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@PostMapping("/users/{cid}/cart-items")
 	public void addItemToCart(@PathVariable("cid") Long customerID, @RequestBody CartItem item) {
 		userService.addItemToCart(customerID, item);
+	}
+
+	@RequestMapping(value = "/confirm-account", method = RequestMethod.POST)
+	public ResponseEntity confirmUserAccount(@RequestBody Map<String, String> requestPa) {
+		ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(requestPa.get("token"));
+
+		if (token != null) {
+			Optional<UserEntity> user = userRepository.findByEmail(token.getUser().getEmail());
+			user.get().setEnabled(true);
+			userService.save(user.get());
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
 	}
 }
