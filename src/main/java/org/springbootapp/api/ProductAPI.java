@@ -47,7 +47,7 @@ public class ProductAPI {
 			service.save(file.getInputStream(), path);
 			String link = request.getRequestURL().toString().replace(request.getRequestURI(), "") + UPLOAD_DIR
 					+ File.separator + file.getOriginalFilename();
-			System.out.println(link);
+//			System.out.println(link);
 			ImageEntity image = new ImageEntity(link, product.getName());
 			product.setImages(new HashSet<>());
 			product.addImage(image);
@@ -103,19 +103,9 @@ public class ProductAPI {
 
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<HttpStatus> updateById(@PathVariable("id") Long id, @ModelAttribute ProductEntity product,
-			@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+	public ResponseEntity<HttpStatus> updateById(@PathVariable("id") Long id, @RequestBody ProductEntity newProduct) {
 		try {
-			String fileName = file.getOriginalFilename();
-			String path = request.getServletContext().getRealPath(UPLOAD_DIR) + File.separator + fileName;
-			service.save(file.getInputStream(), path);
-			String link = request.getRequestURL().toString().replace(request.getRequestURI(), "") + UPLOAD_DIR
-					+ File.separator + file.getOriginalFilename();
-			System.out.println(link);
-			ImageEntity image = new ImageEntity(link, product.getName());
-			product.setImages(new HashSet<>());
-			product.addImage(image);
-			productService.update(id, product);
+			productService.update(id, newProduct);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

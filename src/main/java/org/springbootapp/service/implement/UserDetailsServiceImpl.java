@@ -1,6 +1,7 @@
 package org.springbootapp.service.implement;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springbootapp.entity.CartItem;
 import org.springbootapp.entity.ProductEntity;
@@ -113,7 +114,17 @@ public class UserDetailsServiceImpl implements UserDetailsService, IUserService 
 
 		}		
 	}
+	
+	@Override
+	public void updatePassword(String password, Long id) {
+		userRepository.updatePassword(password, id);
+	}
 
+	@Override
+	public Optional findUserByResetToken(String resetToken) {
+		return userRepository.findByResetToken(resetToken);
+	}
+	
 	@Override
 	public Boolean existsByUsername(String username) {
 		if (userRepository.existsByUsername(username)) {
@@ -130,12 +141,6 @@ public class UserDetailsServiceImpl implements UserDetailsService, IUserService 
 			return false;
 	}
 
-	@Override
-	public UserEntity findByEmail(String email) {
-		System.out.println(email);
-		System.out.println("Mail: " + userRepository.findByEmail(email).getEmail() + userRepository.findByEmail(email).getPassword());
-		return userRepository.findByEmail(email);
-	}
 
 	@Override
 	@Transactional
@@ -144,6 +149,13 @@ public class UserDetailsServiceImpl implements UserDetailsService, IUserService 
 		userRepository.findByIdWithItemsGraph(userID)
 				.ifPresent(customer -> customer.addCartItem(mergeProduct, item.getQuantity()));
 	}
+
+	@Override
+	public Optional<UserEntity> findUserByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	
 
 
 

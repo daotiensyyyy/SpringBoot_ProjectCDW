@@ -1,6 +1,7 @@
 package org.springbootapp.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springbootapp.entity.CartItem;
 import org.springbootapp.entity.UserEntity;
@@ -14,12 +15,16 @@ public interface IUserService extends UserDetailsService {
 	void delete(Long id);
 
 	void update(Long id, UserEntity user);
-	
-	UserEntity findByEmail(String email);
+
+	void updatePassword(String password, Long id);
+
+	Optional<UserEntity> findUserByEmail(String email);
 
 	Boolean existsByUsername(String username);
 
 	Boolean existsByEmail(String email);
-	
+
 	void addItemToCart(Long userID, CartItem item);
+
+	Optional<UserEntity> findUserByResetToken(String resetToken);
 }

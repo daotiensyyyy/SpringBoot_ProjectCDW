@@ -42,11 +42,12 @@ public class UserEntity extends AbstractEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
-
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "customer")
 	private Set<CartItem> items;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
 	private Set<OrderEntity> orders;
+
+	private String resetToken;
 
 	public UserEntity(String username, String email, String password, String address, String phone) {
 		this.username = username;
@@ -59,7 +60,7 @@ public class UserEntity extends AbstractEntity {
 	public UserEntity(Long id) {
 		super(id);
 	}
-	
+
 	public void addCartItem(ProductEntity product, Long quantity) {
 		CartItem cartItem = new CartItem(this, product, quantity);
 		if (!this.items.contains(cartItem)) {
@@ -71,7 +72,7 @@ public class UserEntity extends AbstractEntity {
 				item.increaseQuantity(quantity);
 		});
 	}
-	
+
 	public void updateCart(ProductEntity product, String action) {
 		for (Iterator<CartItem> iterator = this.items.iterator(); iterator.hasNext();) {
 			CartItem item = iterator.next();
@@ -102,7 +103,7 @@ public class UserEntity extends AbstractEntity {
 			}
 		}
 	}
-	
+
 	public void addOrder(OrderEntity order) {
 		this.orders.add(order);
 		order.setCustomer(this);
