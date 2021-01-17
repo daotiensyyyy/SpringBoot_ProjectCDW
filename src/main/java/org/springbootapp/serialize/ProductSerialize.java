@@ -32,7 +32,8 @@ public class ProductSerialize extends StdSerializer<ProductEntity>{
 		gen.writeObjectField("description", value.getDescription());
 		gen.writeObjectField("evaluate", value.getEvaluate());
 		gen.writeObjectField("category", value.getCategory().getId());
-		gen.writeObjectField("images", value.getImages().size());
+//		gen.writeObjectField("images", value.getImages().size());
+		gen.writeObjectField("images", value.getImages());
 		gen.writeEndObject(); 
 	}
 

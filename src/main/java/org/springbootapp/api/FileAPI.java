@@ -24,7 +24,7 @@ public class FileAPI {
 	@Autowired
 	private IFileService service;
 	
-	private static String UPLOAD_DIR = "/media/sydao1579/01D4DD6AEC7B9160/CDWeb For Student/ProjectCDW-master/uploads";
+	private static String UPLOAD_DIR = "/uploads/";
 
 	@RequestMapping(value = "files/upload", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('ADMIN')")

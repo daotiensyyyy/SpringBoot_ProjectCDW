@@ -6,6 +6,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +17,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "image")
+@JsonIgnoreProperties({ "product" })
 public class ImageEntity extends AbstractEntity {
 
 	private String link;
 	private String description;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ProductEntity product;
 

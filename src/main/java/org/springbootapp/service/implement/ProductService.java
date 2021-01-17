@@ -30,6 +30,7 @@ public class ProductService implements IProductService {
 	private IProductRepository productRepository;
 
 	@Override
+	@Transactional
 	public ProductEntity save(ProductEntity product) {
 		return productRepository.saveAndFlush(product);
 	}
@@ -40,6 +41,7 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
+	@Transactional
 	public Optional<ProductEntity> getById(Long id) {
 		Optional<ProductEntity> product = Optional.of(productRepository.findById(id).get());
 		return product;
@@ -52,6 +54,7 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
+	@Transactional
 	public void delete(Long id) {
 		if (productRepository.findById(id).isPresent())
 			productRepository.deleteById(id);
@@ -80,6 +83,7 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
+	@Transactional
 	public void saveImage(MultipartFile imageFile, String folder){
 		try {
 			byte[] bytes = imageFile.getBytes();

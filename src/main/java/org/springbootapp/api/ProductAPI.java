@@ -1,5 +1,6 @@
 package org.springbootapp.api;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springbootapp.entity.ImageEntity;
 import org.springbootapp.entity.ProductEntity;
 import org.springbootapp.service.implement.ProductService;
 
@@ -26,8 +29,12 @@ public class ProductAPI {
 
 	@RequestMapping(value = "/products", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<ProductEntity> createProduct(@RequestBody ProductEntity product) {
+	public ResponseEntity<ProductEntity> createProduct(
+			@RequestBody ProductEntity product/* , @RequestParam("file") MultipartFile file */) {
 		try {
+//			HashSet<ImageEntity> images = new HashSet<>();
+//			images.add(new ImageEntity("/uploads/".concat(file.getOriginalFilename()), "des"));
+//			product.setImages(images);
 			productService.save(product);
 			// Trả về response với STATUS CODE = 201
 			// Body sẽ chứa thông tin về đối tượng todo vừa được tạo.
